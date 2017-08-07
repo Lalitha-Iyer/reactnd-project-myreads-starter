@@ -2,6 +2,7 @@ import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import BookShelf from './BookShelf'
+const escapeStringRegexp = require('escape-string-regexp');
 class BooksApp extends React.Component {
 
 
@@ -13,13 +14,14 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
     showSearchPage: true,
-    books: []
+    books: [],
+    searchBooks: []
   }
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
-      this.state.books = books;
-      console.log(JSON.stringify(books[0]))
+      this.setState({ books })
+      this.setState({ searchBooks: this.state.books });
     })
   }
 
@@ -35,6 +37,13 @@ class BooksApp extends React.Component {
     })
 
   }
+
+  updateSearchResults = (value) => {
+    let regex = new RegExp(escapeStringRegexp(value.trim()),'i')
+    this.setState((prevState)=>{
+       return {searchBooks: prevState.books.filter((book) => regex.test(book.title))}
+    })
+}
 
 
   render() {
@@ -53,12 +62,12 @@ class BooksApp extends React.Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input type="text" placeholder="Search by title or author" />
+                <input type="text" placeholder="Search by title or author" onChange={(event) => this.updateSearchResults(event.target.value)} />
 
               </div>
             </div>
             <div className="search-books-results">
-              <BookShelf books={this.state.books} update={this.updateBookState} />
+              <BookShelf books={this.state.searchBooks} update={this.updateBookState} />
             </div>
           </div>
         ) : (
