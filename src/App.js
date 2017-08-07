@@ -3,6 +3,9 @@ import * as BooksAPI from './BooksAPI'
 import './App.css'
 import BookShelf from './BookShelf'
 const escapeStringRegexp = require('escape-string-regexp');
+import { Route } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+
 class BooksApp extends React.Component {
 
 
@@ -13,7 +16,6 @@ class BooksApp extends React.Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-    showSearchPage: true,
     books: [],
     searchBooks: []
   }
@@ -39,20 +41,20 @@ class BooksApp extends React.Component {
   }
 
   updateSearchResults = (value) => {
-    let regex = new RegExp(escapeStringRegexp(value.trim()),'i')
-    this.setState((prevState)=>{
-       return {searchBooks: prevState.books.filter((book) => regex.test(book.title))}
+    let regex = new RegExp(escapeStringRegexp(value.trim()), 'i')
+    this.setState((prevState) => {
+      return { searchBooks: prevState.books.filter((book) => regex.test(book.title)) }
     })
-}
+  }
 
 
   render() {
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
+        <Route path="/search" render={() => (
           <div className="search-books">
             <div className="search-books-bar">
-              <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
+              <Link className='close-search' to='/'>Close</Link>
               <div className="search-books-input-wrapper">
                 {/* 
                   NOTES: The search from BooksAPI is limited to a particular set of search terms.
@@ -69,23 +71,27 @@ class BooksApp extends React.Component {
             <div className="search-books-results">
               <BookShelf books={this.state.searchBooks} update={this.updateBookState} />
             </div>
-          </div>
-        ) : (
-            <div className="list-books">
-              <div className="list-books-title">
-                <h1>MyReads</h1>
-              </div>
-              <div className="list-books-content">
-                <BookShelf books={this.state.books} update={this.updateBookState} shelf="currentlyReading" title="Currently Reading" />
-                <BookShelf books={this.state.books} update={this.updateBookState} shelf="wantToRead" title="Want to Read" />
-                <BookShelf books={this.state.books} update={this.updateBookState} shelf="read" title="Read" />
-
-              </div>
-              <div className="open-search">
-                <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
-              </div>
+          </div>)}>
+        </Route>
+        <Route exact path="/" render={() => (
+          <div className="list-books">
+            <div className="list-books-title">
+              <h1>MyReads</h1>
             </div>
-          )}
+            <div className="list-books-content">
+              <BookShelf books={this.state.books} update={this.updateBookState} shelf="currentlyReading" title="Currently Reading" />
+              <BookShelf books={this.state.books} update={this.updateBookState} shelf="wantToRead" title="Want to Read" />
+              <BookShelf books={this.state.books} update={this.updateBookState} shelf="read" title="Read" />
+
+            </div>
+            <div className="open-search">
+              <Link className='open-search' to='/search'>Search</Link>
+            </div>
+          </div>)}>
+
+        </Route>
+
+
       </div>
     )
   }
