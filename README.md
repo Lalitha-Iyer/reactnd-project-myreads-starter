@@ -4,7 +4,10 @@ Of course, you are free to start this project from scratch if you wish! Just be 
 
 ## Launch the project 
 After cloning 
-run npm i and npm run start 
+npm i 
+npm run start 
+
+you should see  a broswer open up on localhost:3000
 
 ## What You're Getting
 ```
