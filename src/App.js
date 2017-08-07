@@ -4,7 +4,16 @@ import './App.css'
 import BookShelf from './BookShelf'
 class BooksApp extends React.Component {
 
-    books = [
+
+  state = {
+    /**
+     * TODO: Instead of using this state variable to keep track of which page
+     * we're on, use the URL in the browser's address bar. This will ensure that
+     * users can use the browser's back and forward buttons to navigate between
+     * pages, as well as provide a good URL they can bookmark and share.
+     */
+    showSearchPage: true,
+    books : [
       {
         title: "To Kill a Mockingbird",
         author: "Harper Lee",
@@ -42,23 +51,23 @@ class BooksApp extends React.Component {
         url: "http://books.google.com/books/content?id=1q_xAwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE712CA0cBYP8VKbEcIVEuFJRdX1k30rjLM29Y-dw_qU1urEZ2cQ42La3Jkw6KmzMmXIoLTr50SWTpw6VOGq1leINsnTdLc_S5a5sn9Hao2t5YT7Ax1RqtQDiPNHIyXP46Rrw3aL8&source=gbs_api",
         state: "Read"
       }
-    ]
-  state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: true
+    ]  
   }
+  
+  updateBookState = (value,title) => {
+    this.setState((prevState)=> {
+         prevState.books.map((book)=>{
+          if(title === book.title){
+            console.log(event)
+            book.state = value
+          } 
+        })
+    })
+   console.log(JSON.stringify(this.state.books))   
+  }    
   
 
   render() {
-
-   
-
-    
     return (
       <div className="app">
         {this.state.showSearchPage ? (
@@ -79,7 +88,7 @@ class BooksApp extends React.Component {
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+                <BookShelf books={this.state.books} update={this.updateBookState} />
             </div>
           </div>
         ) : (
@@ -88,9 +97,9 @@ class BooksApp extends React.Component {
               <h1>MyReads</h1>
             </div>
             <div className="list-books-content">
-              <BookShelf books={this.books} title="Currently Reading"/>
-              <BookShelf books={this.books} title="Want to Read  "/>
-              <BookShelf books={this.books} title="Read"/>
+              <BookShelf books={this.state.books} update={this.updateBookState} title="Currently Reading"/>
+              <BookShelf books={this.state.books} update={this.updateBookState} title="Want to Read"/>
+              <BookShelf books={this.state.books} update={this.updateBookState}  title="Read"/>
 
             </div>
             <div className="open-search">
