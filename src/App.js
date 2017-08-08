@@ -27,7 +27,7 @@ class BooksApp extends React.Component {
     })
   }
 
-  updateBookState = (value, id) => {
+  updateBookState = function (value, id) {
     this.setState((prevState) => {
       prevState.books.map((book) => {
         if (id === book.id) {
@@ -61,7 +61,7 @@ class BooksApp extends React.Component {
               </div>
             </div>
             <div className="search-books-results">
-              <BookShelf books={this.state.searchBooks} update={this.updateBookState} />
+              <BookShelf books={this.state.searchBooks} update={this.updateBookState.bind(this)} />
             </div>
           </div>)}>
         </Route>
@@ -71,9 +71,9 @@ class BooksApp extends React.Component {
               <h1>MyReads</h1>
             </div>
             <div className="list-books-content">
-              <BookShelf books={this.state.books} update={this.updateBookState} shelf="currentlyReading" title="Currently Reading" />
-              <BookShelf books={this.state.books} update={this.updateBookState} shelf="wantToRead" title="Want to Read" />
-              <BookShelf books={this.state.books} update={this.updateBookState} shelf="read" title="Read" />
+              <BookShelf books={this.state.books} update={this.updateBookState.bind(this)} shelf="currentlyReading" title="Currently Reading" />
+              <BookShelf books={this.state.books} update={this.updateBookState.bind(this)} shelf="wantToRead" title="Want to Read" />
+              <BookShelf books={this.state.books} update={this.updateBookState.bind(this)} shelf="read" title="Read" />
 
             </div>
             <div className="open-search">
