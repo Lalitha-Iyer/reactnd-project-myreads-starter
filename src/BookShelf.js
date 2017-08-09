@@ -1,7 +1,11 @@
 import React from 'react'
 
-
 class BookShelf extends React.Component {
+
+  componentDidMount(){
+      console.log("**cdm2")
+
+}
 
   render() {
     const { books } = this.props
@@ -19,12 +23,12 @@ class BookShelf extends React.Component {
                       <div className="book-top">
                         <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
                         <div className="book-shelf-changer">
-                          <select onChange={(event) => this.props.update(event.target.value, book.id)}>
+                          <select onChange={(event) => this.props.update(event.target.value, book)}>
                             <option value="none" disabled>Move to...</option>
-                            <option value="currentlyReading" selected={book.shelf==="currentlyReading"} >Currently Reading</option>
-                            <option value="wantToRead" selected={book.shelf==="wantToRead"}>Want to Read</option>
-                            <option value="read" selected={book.shelf==="read"} >Read</option>
-                            <option value="None" >None</option>
+                            <option value="currentlyReading" selected={book.shelf === "currentlyReading"} >Currently Reading</option>
+                            <option value="wantToRead" selected={book.shelf === "wantToRead"}>Want to Read</option>
+                            <option value="read" selected={book.shelf === "read"} >Read</option>
+                            <option value="none" selected={book.shelf ==="none"}>None</option>
                           </select>
                         </div>
                       </div>

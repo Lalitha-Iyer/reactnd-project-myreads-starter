@@ -2,10 +2,10 @@ import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import BookShelf from './BookShelf'
-const escapeStringRegexp = require('escape-string-regexp');
-import { Route } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
+import { Route } from 'react-router-dom'
+import Search from './Search'
 class BooksApp extends React.Component {
 
 
@@ -23,57 +23,39 @@ class BooksApp extends React.Component {
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
-      this.setState({ searchBooks: this.state.books });
     })
   }
 
-  updateBookState = function (value, id) {
+  updateBookState = function (value, book) {
     this.setState((prevState) => {
-      prevState.books.map((book) => {
-        if (id === book.id) {
+      return prevState.books.map((b) => {
+        if (book.id === b.id) {
           book.shelf = value
-          BooksAPI.update(book, value)
-            .then(console.log("update succesful"))
         }
       })
     })
+    this.forceUpdate()
+    BooksAPI.update(book, value)
+      .then(console.log("update succesful"))
 
   }
-
-  updateSearchResults = (value) => {
-    let regex = new RegExp(escapeStringRegexp(value.trim()), 'i')
-    this.setState((prevState) => {
-      return { searchBooks: prevState.books.filter((book) => regex.test(book.title) || regex.test(book.authors)) }
-    })
-  }
-
 
   render() {
     return (
       <div className="app">
-        <Route path="/search" render={() => (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <Link className='close-search' to='/'>Close</Link>
-              <div className="search-books-input-wrapper">
-                <input type="text" placeholder="Search by title or author" onChange={(event) => this.updateSearchResults(event.target.value)} />
+        <Route path="/search" render= {()=> (
+          <Search books={this.state.books} update={this.updateBookState.bind(this) }/>
+         )} > </Route>
 
-              </div>
-            </div>
-            <div className="search-books-results">
-              <BookShelf books={this.state.searchBooks} update={this.updateBookState.bind(this)} />
-            </div>
-          </div>)}>
-        </Route>
         <Route exact path="/" render={() => (
           <div className="list-books">
             <div className="list-books-title">
               <h1>MyReads</h1>
             </div>
             <div className="list-books-content">
-              <BookShelf books={this.state.books} update={this.updateBookState.bind(this)} shelf="currentlyReading" title="Currently Reading" />
+              <BookShelf books={this.state.books} update={this.updateBookState.bind(this)}  shelf="currentlyReading" title="Currently Reading" />
               <BookShelf books={this.state.books} update={this.updateBookState.bind(this)} shelf="wantToRead" title="Want to Read" />
-              <BookShelf books={this.state.books} update={this.updateBookState.bind(this)} shelf="read" title="Read" />
+              <BookShelf books={this.state.books} update={this.updateBookState.bind(this)} shelf="read"  title="Read" />
 
             </div>
             <div className="open-search">
