@@ -30,7 +30,7 @@ class BooksApp extends React.Component {
     this.setState((prevState) => {
       return prevState.books.map((b) => {
         if (book.id === b.id) {
-          book.shelf = value
+          b.shelf = value
         }
       })
     })
